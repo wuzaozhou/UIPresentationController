@@ -50,12 +50,23 @@
     return CGRectMake(0, [UIScreen mainScreen].bounds.size.height-_controllerHeight, [UIScreen mainScreen].bounds.size.width, _controllerHeight);
 }
 
+- (void)onClick:(UIGestureRecognizer *)gestureRecognizer {
+    CGPoint point = [gestureRecognizer locationInView:self.blackView];
+    if (!CGRectContainsPoint([self frameOfPresentedViewInContainerView], point)) {
+        [self.presentedViewController dismissViewControllerAnimated:YES completion:nil];
+    }
+}
+
 
 
 - (UIView *)blackView {
     if (_blackView == nil) {
         _blackView = [[UIView alloc] initWithFrame:self.containerView.bounds];
         _blackView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onClick:)];
+        tap.numberOfTapsRequired = 1;
+        tap.numberOfTouchesRequired = 1;
+        [_blackView addGestureRecognizer:tap];
     }
     return _blackView;
 }
